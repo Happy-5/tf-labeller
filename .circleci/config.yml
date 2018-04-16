@@ -1,0 +1,26 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/builder-base:1.1
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update && sudo apt-get install -y git make curl zip
+      - run:
+          name: Init Makefile
+          command: |
+            make init
+      
+      - run:
+          name: Run test
+          command: |
+            make terraform:install
+            make terraform:get-plugins
+            make terraform:get-modules
+            make terraform:lint
+            make terraform:validate
